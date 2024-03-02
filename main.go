@@ -11,48 +11,23 @@ import (
 )
 
 var ver = `
-                       ██                      
-                      ████                     
-                     ██████                    
-                    ████████                   
-                   ██████████                  
-                  ████████████                 
-                 ██████████████                
-                ████████████████               
-               ██████████████████              `
-
+ /\ `
 var rev = `
-               ██████████████████              
-                ████████████████               
-                 ██████████████                
-                  ████████████                 
-                   ██████████                  
-                    ████████                   
-                     ██████                    
-                      ████                     
-                       ██                      `
+ \/ `
 
 var cel = `
-              ████████████████████             
-             ██████████████████████            
-            ████████████████████████           
-           ██████████████████████████          
-          ████████████████████████████         
-         ██████████████████████████████        
-        ████████████████████████████████       
-       ██████████████████████████████████      
-      ████████████████████████████████████     `
+/  \`
+var celOpen = `
+/¯¯\`
+var celClose = `
+/__\`
 
 var lec = `
-      ████████████████████████████████████     
-       ██████████████████████████████████      
-        ████████████████████████████████       
-         ██████████████████████████████        
-          ████████████████████████████         
-           ██████████████████████████          
-            ████████████████████████           
-             ██████████████████████            
-              ████████████████████             `
+\  /`
+var lecClose = `
+\__/`
+var lecOpen = `
+\¯¯/`
 
 func getWords(prompt string) ([][]byte, string) {
 	// Find all the possible words in the prompt
@@ -103,17 +78,30 @@ func main() {
 	}
 
 	result := ``
+	lastIndex := len(words) - 1
 
-	for _, value := range words {
+	for index, value := range words {
 		switch string(value) {
 		case "ver":
 			result += ver
 		case "cel":
-			result += cel
+			if index == lastIndex {
+				result += celClose
+			} else if index == 0 {
+				result += celOpen
+			} else {
+				result += cel
+			}
 		case "rev":
 			result += rev
 		case "lec":
-			result += lec
+			if index == lastIndex {
+				result += lecClose
+			} else if index == 0 {
+				result += lecOpen
+			} else {
+				result += lec
+			}
 		}
 	}
 
