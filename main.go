@@ -8,40 +8,139 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/lipgloss"
 )
 
-var ver = `
- /\ `
-var rev = `
- \/ `
+var wrapper = lipgloss.NewStyle().
+	Border(lipgloss.RoundedBorder()).
+	BorderForeground(lipgloss.Color("#7D56F4")).
+	Width(22).
+	Align(lipgloss.Center)
 
-var cel = `
-/  \`
-var celOpen = `
-/¯¯\`
-var celClose = `
-/__\`
+var oddWordStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#FAFAFA")).
+	Background(lipgloss.Color("#04B575")).
+	Padding(0, 1)
 
-var lec = `
-\  /`
-var lecClose = `
-\__/`
-var lecOpen = `
-\¯¯/`
+var evenWordStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#3C3C3C")).
+	Background(lipgloss.Color("#FAFAFA")).
+	Padding(0, 1)
 
-func getWords(prompt string) ([][]byte, string) {
+const ver = `
+   /\  
+  /  \ `
+const verClose = `
+   /\  
+  /__\ `
+const rev = `
+  \  / 
+   \/  `
+const revOpen = `
+  \¯¯/ 
+   \/  `
+
+const cel = `
+ /    \  
+/      \ `
+const celOpen = `
+ /¯¯¯¯\  
+/      \ `
+const celClose = `
+ /    \  
+/______\ `
+
+const lec = `
+\      /
+ \    / `
+const lecClose = `
+\      /
+ \____/ `
+const lecOpen = `
+\¯¯¯¯¯¯/
+ \    / `
+
+func getWords(prompt string) []string {
 	// Find all the possible words in the prompt
 	regex := regexp.MustCompile(`ver|cel|rev|lec`)
 	sliceResults := regex.FindAll([]byte(prompt), -1)
 
-	// Convert the byte slices to strings and join them
+	// Convert the slice of bytes to a slice of strings
 	wordList := make([]string, len(sliceResults))
 	for i, word := range sliceResults {
 		wordList[i] = string(word)
 	}
-	stringResult := strings.Join(wordList, " ")
 
-	return sliceResults, stringResult
+	return wordList
+}
+
+func validatePrompt(prompt string) error {
+	if strings.Trim(prompt, " ") == "" {
+		return errors.New("please enter a valid prompt")
+	}
+	return nil
+}
+
+func drawPrompt(words []string) string {
+	result := ``
+	lastIndex := len(words) - 1
+
+	for index, value := range words {
+		switch string(value) {
+		case "ver":
+			if index == lastIndex {
+				result += verClose
+			} else {
+				result += ver
+			}
+
+		case "cel":
+			if index == lastIndex {
+				result += celClose
+			} else if index == 0 {
+				result += celOpen
+			} else {
+				result += cel
+			}
+
+		case "rev":
+			if index == 0 {
+				result += revOpen
+			} else {
+				result += rev
+			}
+
+		case "lec":
+			if index == lastIndex {
+				result += lecClose
+			} else if index == 0 {
+				result += lecOpen
+			} else {
+				result += lec
+			}
+		}
+	}
+
+	return result
+}
+
+// drawListOfWords takes a list of words and draws them in a grid of 3 columns
+func drawListOfWords(words []string) string {
+	result := ``
+	for index, word := range words {
+		if index%3 == 0 && index != 0 {
+			result += "\n"
+		}
+
+		if index%2 == 0 {
+			result += oddWordStyle.Render(string(word))
+		} else {
+			result += evenWordStyle.Render(string(word))
+		}
+
+	}
+
+	return result
 }
 
 var prompt string
@@ -57,13 +156,8 @@ func main() {
 				CharLimit(100).
 				Placeholder("lecrev").
 				Value(&prompt).
-				Validate(func(prompt string) error {
-					if strings.Trim(prompt, " ") == "" {
-						return errors.New("please enter a valid prompt")
-					}
-					return nil
-				})),
-	)
+				Validate(validatePrompt),
+		))
 
 	err := form.Run()
 
@@ -71,40 +165,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	words, wordString := getWords(prompt)
+	words := getWords(prompt)
 
 	if len(words) == 0 {
 		log.Fatal("please enter a valid prompt")
 	}
 
-	result := ``
-	lastIndex := len(words) - 1
+	fmt.Println(wrapper.Render(drawListOfWords(words)))
+	fmt.Println(drawPrompt(words))
 
-	for index, value := range words {
-		switch string(value) {
-		case "ver":
-			result += ver
-		case "cel":
-			if index == lastIndex {
-				result += celClose
-			} else if index == 0 {
-				result += celOpen
-			} else {
-				result += cel
-			}
-		case "rev":
-			result += rev
-		case "lec":
-			if index == lastIndex {
-				result += lecClose
-			} else if index == 0 {
-				result += lecOpen
-			} else {
-				result += lec
-			}
-		}
-	}
-
-	fmt.Println("Result for: ", wordString)
-	fmt.Println(result)
 }
