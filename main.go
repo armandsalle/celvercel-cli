@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"regexp"
 	"strings"
 
@@ -11,6 +12,9 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+/*
+ * Styles for the prompt and the words
+ */
 var wrapper = lipgloss.NewStyle().
 	Border(lipgloss.RoundedBorder()).
 	BorderForeground(lipgloss.Color("#7D56F4")).
@@ -27,6 +31,12 @@ var evenWordStyle = lipgloss.NewStyle().
 	Background(lipgloss.Color("#FAFAFA")).
 	Padding(0, 1)
 
+var errorStyle = oddWordStyle.Copy().
+	Background(lipgloss.Color("#f87171"))
+
+/*
+ * Drawing styles for the words
+ */
 const ver = `
    /\  
   /  \ `
@@ -60,6 +70,9 @@ const lecOpen = `
 \¯¯¯¯¯¯/
  \    / `
 
+/*
+ * Functions
+ */
 func getWords(prompt string) []string {
 	// Find all the possible words in the prompt
 	regex := regexp.MustCompile(`ver|cel|rev|lec`)
@@ -143,6 +156,9 @@ func drawListOfWords(words []string) string {
 	return result
 }
 
+/*
+ * Main
+ */
 var prompt string
 
 func main() {
@@ -168,10 +184,10 @@ func main() {
 	words := getWords(prompt)
 
 	if len(words) == 0 {
-		log.Fatal("please enter a valid prompt")
+		fmt.Println(errorStyle.Render("You must enter a valid prompt :("))
+		os.Exit(1)
 	}
 
 	fmt.Println(wrapper.Render(drawListOfWords(words)))
 	fmt.Println(drawPrompt(words))
-
 }
