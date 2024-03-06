@@ -1,165 +1,18 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"os"
-	"regexp"
-	"strings"
+
+	"celvercel/pkg/helpers"
+	"celvercel/pkg/prompt"
+	"celvercel/pkg/styles"
 
 	"github.com/charmbracelet/huh"
-	"github.com/charmbracelet/lipgloss"
 )
 
-/*
- * Styles for the prompt and the words
- */
-var wrapper = lipgloss.NewStyle().
-	Border(lipgloss.RoundedBorder()).
-	BorderForeground(lipgloss.Color("#7D56F4")).
-	Width(22).
-	Align(lipgloss.Center)
-
-var oddWordStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("#FAFAFA")).
-	Background(lipgloss.Color("#04B575")).
-	Padding(0, 1)
-
-var evenWordStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("#3C3C3C")).
-	Background(lipgloss.Color("#FAFAFA")).
-	Padding(0, 1)
-
-var errorStyle = oddWordStyle.Copy().
-	Background(lipgloss.Color("#f87171"))
-
-/*
- * Drawing styles for the words
- */
-const ver = `
-   /\  
-  /  \ `
-const verClose = `
-   /\  
-  /__\ `
-const rev = `
-  \  / 
-   \/  `
-const revOpen = `
-  \¯¯/ 
-   \/  `
-
-const cel = `
- /    \  
-/      \ `
-const celOpen = `
- /¯¯¯¯\  
-/      \ `
-const celClose = `
- /    \  
-/______\ `
-
-const lec = `
-\      /
- \    / `
-const lecClose = `
-\      /
- \____/ `
-const lecOpen = `
-\¯¯¯¯¯¯/
- \    / `
-
-/*
- * Functions
- */
-func getWords(prompt string) []string {
-	// Find all the possible words in the prompt
-	regex := regexp.MustCompile(`ver|cel|rev|lec`)
-	sliceResults := regex.FindAll([]byte(prompt), -1)
-
-	// Convert the slice of bytes to a slice of strings
-	wordList := make([]string, len(sliceResults))
-	for i, word := range sliceResults {
-		wordList[i] = string(word)
-	}
-
-	return wordList
-}
-
-func validatePrompt(prompt string) error {
-	if strings.Trim(prompt, " ") == "" {
-		return errors.New("please enter a valid prompt")
-	}
-	return nil
-}
-
-func drawPrompt(words []string) string {
-	result := ``
-	lastIndex := len(words) - 1
-
-	for index, value := range words {
-		switch string(value) {
-		case "ver":
-			if index == lastIndex {
-				result += verClose
-			} else {
-				result += ver
-			}
-
-		case "cel":
-			if index == lastIndex {
-				result += celClose
-			} else if index == 0 {
-				result += celOpen
-			} else {
-				result += cel
-			}
-
-		case "rev":
-			if index == 0 {
-				result += revOpen
-			} else {
-				result += rev
-			}
-
-		case "lec":
-			if index == lastIndex {
-				result += lecClose
-			} else if index == 0 {
-				result += lecOpen
-			} else {
-				result += lec
-			}
-		}
-	}
-
-	return result
-}
-
-// drawListOfWords takes a list of words and draws them in a grid of 3 columns
-func drawListOfWords(words []string) string {
-	result := ``
-	for index, word := range words {
-		if index%3 == 0 && index != 0 {
-			result += "\n"
-		}
-
-		if index%2 == 0 {
-			result += oddWordStyle.Render(string(word))
-		} else {
-			result += evenWordStyle.Render(string(word))
-		}
-
-	}
-
-	return result
-}
-
-/*
- * Main
- */
-var prompt string
+var userPrompt string
 
 func main() {
 	form := huh.NewForm(
@@ -171,8 +24,8 @@ func main() {
 				Prompt("▲ ").
 				CharLimit(100).
 				Placeholder("lecrev").
-				Value(&prompt).
-				Validate(validatePrompt),
+				Value(&userPrompt).
+				Validate(helpers.ValidatePrompt),
 		))
 
 	err := form.Run()
@@ -181,13 +34,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	words := getWords(prompt)
+	words := prompt.GetWords(userPrompt)
 
 	if len(words) == 0 {
-		fmt.Println(errorStyle.Render("You must enter a valid prompt :("))
+		fmt.Println(styles.ErrorStyle.Render("You must enter a valid prompt :("))
 		os.Exit(1)
 	}
 
-	fmt.Println(wrapper.Render(drawListOfWords(words)))
-	fmt.Println(drawPrompt(words))
+	fmt.Println(styles.Wrapper.Render(prompt.DrawListOfWords(words)))
+	fmt.Println(prompt.DrawPrompt(words))
 }
