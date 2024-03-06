@@ -10,11 +10,10 @@ Oreo meme is a meme where someone separates the 3 parts of an Oreo `O` (the top 
 
 - [x] Create the project
 - [x] Create the Oreo meme with Vercel logo
+- [x] Add a LICENSE
 - [ ] Add Cobra to handle args and flags
 - [ ] Add tests
 - [ ] Add CI/CD
-- [ ] Add a badge to the README
-- [ ] Add a LICENSE
 - [ ] Publish the package to Homebrew and APT
 
 - [ ] Create a public API?
