@@ -6,11 +6,9 @@ import (
 )
 
 func GetWords(prompt string) []string {
-	// Find all the possible words in the prompt
 	regex := regexp.MustCompile(`ver|cel|rev|lec`)
 	sliceResults := regex.FindAll([]byte(prompt), -1)
 
-	// Convert the slice of bytes to a slice of strings
 	wordList := make([]string, len(sliceResults))
 	for i, word := range sliceResults {
 		wordList[i] = string(word)
@@ -19,43 +17,56 @@ func GetWords(prompt string) []string {
 	return wordList
 }
 
+func getAsciiArt(index int, lastIndex int, nextWord string, asciiArt AsciiArt) string {
+	// If there is only one word, return the only ascii art
+	if index == lastIndex && index == 0 {
+		return asciiArt.Only
+	}
+
+	// If it's the first word, return the open ascii art
+	if index == 0 {
+		openBeforeAscii := asciiArt.HandleOpenBefore(nextWord)
+
+		if openBeforeAscii == "" {
+			return asciiArt.Open
+		}
+
+		return openBeforeAscii
+	}
+
+	// If it's the last word, return the close ascii art
+	if index == lastIndex {
+		return asciiArt.Close
+	}
+
+	// If it's not the first or last word, return the default ascii art
+	beforeAscii := asciiArt.HandleBefore(nextWord)
+	if beforeAscii != "" {
+		return beforeAscii
+	}
+
+	return asciiArt.Default
+}
+
 func DrawPrompt(words []string) string {
 	result := ``
 	lastIndex := len(words) - 1
 
 	for index, value := range words {
+		var nextWord string
+		if index != lastIndex {
+			nextWord = words[index+1]
+		}
+
 		switch string(value) {
 		case "ver":
-			if index == lastIndex {
-				result += VerClose
-			} else {
-				result += Ver
-			}
-
+			result += getAsciiArt(index, lastIndex, nextWord, VerAscii)
 		case "cel":
-			if index == lastIndex {
-				result += CelClose
-			} else if index == 0 {
-				result += CelOpen
-			} else {
-				result += Cel
-			}
-
+			result += getAsciiArt(index, lastIndex, nextWord, CelAscii)
 		case "rev":
-			if index == 0 {
-				result += RevOpen
-			} else {
-				result += Rev
-			}
-
+			result += getAsciiArt(index, lastIndex, nextWord, RevAscii)
 		case "lec":
-			if index == lastIndex {
-				result += LecClose
-			} else if index == 0 {
-				result += LecOpen
-			} else {
-				result += Lec
-			}
+			result += getAsciiArt(index, lastIndex, nextWord, LecAscii)
 		}
 	}
 
