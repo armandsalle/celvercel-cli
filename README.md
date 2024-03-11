@@ -71,4 +71,4 @@ goreleaser release --clean
 - [x] Add Cobra to handle args and flags
 - [x] Add tests
 - [x] Add CI/CD
-- [ ] Publish the package to Homebrew and APT
+- [ ] Publish the package to NPM
