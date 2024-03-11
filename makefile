@@ -5,3 +5,6 @@ run:
 
 build:
 	go build -o build/celvercel
+
+dev:
+	go build -o build/celvercel && ./build/celvercel
