@@ -20,3 +20,6 @@
 go.work
 
 build
+
+data.txt
+result.txt

@@ -20,3 +20,6 @@ var EvenWordStyle = lipgloss.NewStyle().
 
 var ErrorStyle = OddWordStyle.Copy().
 	Background(lipgloss.Color("#f87171"))
+
+var SuccessStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("#04B575"))
