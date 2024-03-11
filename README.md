@@ -53,6 +53,16 @@ prompt: celvercel
 
 ```
 
+### How to build and release
+
+I'm using [goreleaser](https://goreleaser.com/) to release the package. Documentation is [here](https://goreleaser.com/quick-start/).
+
+```bash
+git tag -a v0.0.1 -m "Message"
+git push origin v0.0.1
+goreleaser release --clean
+```
+
 ### Todo
 
 - [x] Create the project
@@ -60,5 +70,5 @@ prompt: celvercel
 - [x] Add a LICENSE
 - [x] Add Cobra to handle args and flags
 - [x] Add tests
-- [ ] Add CI/CD
+- [x] Add CI/CD
 - [ ] Publish the package to Homebrew and APT
