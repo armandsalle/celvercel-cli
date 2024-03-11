@@ -20,6 +20,8 @@
 go.work
 
 build
+bin
+.DS_Store
 
 data.txt
 result.txt
