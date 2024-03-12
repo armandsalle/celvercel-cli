@@ -133,9 +133,15 @@ async function install(callback) {
   if (!opts) return callback(INVALID_INPUT)
   mkdirp.sync(opts.binPath)
   console.info(`Copying the relevant binary for your platform ${process.platform}`)
-  const src = `./dist/celvercel-cli-${process.platform}-${ARCH_MAPPING[process.arch]}_${process.platform}_${
-    ARCH_MAPPING[process.arch]
-  }/${opts.binName}`
+  const arch = ARCH_MAPPING[process.arch]
+  const src =
+    arch === "arm64"
+      ? `./dist/celvercel-cli-${process.platform}-${arch}_${process.platform}_${ARCH_MAPPING[process.arch]}/${
+          opts.binName
+        }`
+      : `./dist/celvercel-cli-${process.platform}-${arch}_${process.platform}_${ARCH_MAPPING[process.arch]}_v1/${
+          opts.binName
+        }`
   await execShellCommand(`cp ${src} ${opts.binPath}/${opts.binName}`)
   await verifyAndPlaceBinary(opts.binName, opts.binPath, callback)
 }
