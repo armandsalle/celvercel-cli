@@ -21,15 +21,14 @@
   "homepage": "https://github.com/armandsalle/celvercel-cli#readme",
   "main": "index.js",
   "scripts": {
-    "postinstall": "go-npm install",
-    "preuninstall": "go-npm uninstall"
-  },
-  "dependencies": {
-    "go-npm": "^0.1.9"
+    "postinstall": "node postinstall.js install",
+    "preuninstall": "node postinstall.js uninstall"
   },
   "goBinary": {
     "name": "celvercel",
-    "path": "./bin",
-    "url": "https://github.com/armandsalle/celvercel-cli/releases/download/v{{version}}/celvercel_{{version}}_{{platform}}_{{arch}}.tar.gz"
+    "path": "./bin"
+  },
+  "dependencies": {
+    "mkdirp": "^3.0.1"
   }
 }
