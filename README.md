@@ -35,22 +35,18 @@ Oreo meme is a meme where someone separates the 3 parts of an Oreo `O` (the top 
    /\
   /__\
 ```
+
 ## How to use it?
 
+One command to rule them all. Just run the following command and follow the instructions.
+
 ```bash
-celvercel-cli --output result.txt
+npx celvercel
+```
 
-prompt: celvercel
-
-# result.txt
-
- /¯¯¯¯\
-/______\
-   /\
-  /  \
- /    \
-/______\
-
+if you want to save the result in a file, just add the `--output` flag and the name of the file. The file will be saved in the current directory.
+```bash
+npx celvercel --output my-oreo-meme.txt
 ```
 
 ### How to build and release
