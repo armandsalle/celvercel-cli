@@ -1,6 +1,6 @@
 {
   "name": "celvercel",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A simple CLI tool to create Oreo meme with the Vercel logo.",
   "author": "Armand Sallé",
   "license": "MIT",
@@ -30,5 +30,9 @@
   },
   "dependencies": {
     "mkdirp": "^3.0.1"
-  }
+  },
+  "files": [
+    "dist",
+    "postinstall.js"
+  ]
 }
