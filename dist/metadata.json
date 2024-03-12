@@ -1,1 +1,1 @@
-{"project_name":"celvercel","tag":"v0.1.7","previous_tag":"v0.1.6","version":"0.1.7","commit":"e5512f0305001bb824e8c8bca604eda28c2cbfc6","date":"2024-03-12T11:59:45.387389+01:00","runtime":{"goos":"darwin","goarch":"arm64"}}
+{"project_name":"celvercel","tag":"v0.1.8","previous_tag":"v0.1.7","version":"0.1.8","commit":"d7123f1a1d1e47f73f19a7f82acf8324d241122a","date":"2024-03-12T13:39:00.516029+01:00","runtime":{"goos":"darwin","goarch":"arm64"}}

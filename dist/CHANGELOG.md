@@ -1,3 +1,3 @@
 ## Changelog
-* e5512f0 Fix npx and bin issues
-* 6373cbc Update distribution files and metadata for celvercel v0.1.6
+* b2ccfe8 Update distribution files and metadata for celvercel v0.1.7
+* d7123f1 Update package.json and postinstall.js
